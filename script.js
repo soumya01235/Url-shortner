@@ -1,24 +1,13 @@
-
-const shortenUrl = async () => {
-    const longUrl = document.getElementById('long-url').value;
-    const response = await fetch(`https://api.shrtco.de/v2/shorten?url=${longUrl}`);
-    const data = await response.json();
-    const shortUrl = data.result.full_short_link;
-  
-    const shortUrlContainer = document.getElementById('short-url-container');
-    const shortUrlLink = document.getElementById('short-url').querySelector('a');
-    shortUrlLink.href = shortUrl;
-    shortUrlLink.textContent = shortUrl;
-    shortUrlContainer.style.display = 'block';
-  
-    const copyBtn = document.getElementById('copy-btn');
-    copyBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(shortUrl).then(() => {
-        alert('Copied to clipboard!');
-      });
-    });
+function shortenUrl() {
+  var longUrl = document.getElementById("longUrl").value;
+  var request = new XMLHttpRequest();
+  request.open("POST", "/shorten", true);
+  request.setRequestHeader("Content-Type", "application/json");
+  request.onreadystatechange = function() {
+    if (request.readyState === 4 && request.status === 200) {
+      var shortUrl = document.getElementById("shortUrl");
+      shortUrl.innerHTML = "Shortened URL: " + window.location.href + request.responseText;
+    }
   };
-  
-  const shortenBtn = document.getElementById('shorten-btn');
-  shortenBtn.addEventListener('click', shortenUrl);
-  
+  request.send(JSON.stringify({ url: longUrl }));
+}
